@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phone Verification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            width: 320px;
+            text-align: center;
+        }
+        input {
+            width: 90%;
+            padding: 8px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .message {
+            margin-top: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            color: red;
+        }
+        .success {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Phone Verification</h2>
+        <input type="text" id="phoneNumber" placeholder="Enter phone number">
+        <button id="sendButton" onclick="sendVerification()">Send Code</button>
+
+        <input type="text" id="code" placeholder="Enter verification code" style="display:none;">
+        <button id="verifyButton" onclick="verifyCode()" style="display:none;">Verify</button>
+
+        <p class="message" id="message"></p>
+    </div>
+
+    <script>
+        async function sendVerification() {
+            const phoneNumber = document.getElementById("phoneNumber").value.trim();
+            const message = document.getElementById("message");
+            const sendButton = document.getElementById("sendButton");
+
+            if (!phoneNumber) {
+                message.textContent = "Please enter a phone number.";
+                return;
+            }
+
+            sendButton.disabled = true; // Prevent multiple clicks
+            message.textContent = "Sending code...";
+
+            try {
+                const response = await fetch("http://localhost:3000/api/send-code", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ phoneNumber })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    message.textContent = "Verification code sent!";
+                    message.classList.remove("success");
+                    document.getElementById("code").style.display = "block";
+                    document.getElementById("verifyButton").style.display = "block";
+                } else {
+                    message.textContent = data.message || "Failed to send code.";
+                }
+            } catch (error) {
+                message.textContent = "Error sending code. Try again.";
+            }
+
+            sendButton.disabled = false; // Re-enable button
+        }
+
+        async function verifyCode() {
+            const phoneNumber = document.getElementById("phoneNumber").value.trim();
+            const code = document.getElementById("code").value.trim();
+            const message = document.getElementById("message");
+            const verifyButton = document.getElementById("verifyButton");
+
+            if (!code) {
+                message.textContent = "Please enter the verification code.";
+                return;
+            }
+
+            verifyButton.disabled = true; // Prevent multiple clicks
+            message.textContent = "Verifying...";
+
+            try {
+                const response = await fetch("http://localhost:3000/api/verify-code", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ phoneNumber, code })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    message.textContent = "Phone number verified successfully!";
+                    message.classList.add("success");
+                } else {
+                    message.textContent = data.message || "Verification failed.";
+                    message.classList.remove("success");
+                }
+            } catch (error) {
+                message.textContent = "Error verifying code. Try again.";
+            }
+
+            verifyButton.disabled = false; // Re-enable button
+        }
+    </script>
+
+</body>
+</html>
