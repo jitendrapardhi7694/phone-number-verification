@@ -22,7 +22,7 @@ This project is a simple phone verification system using **Node.js**, **Express*
 ### Steps to Run
 1. **Clone the Repository:**
    ```sh
-   git clone https://github.com/your-repo/phone-verification.git
+   git clone https://github.com/jitendrapardhi7694/phone-number-verification.git
    cd phone-verification
    ```
 
@@ -38,7 +38,7 @@ This project is a simple phone verification system using **Node.js**, **Express*
    The server will run on `http://localhost:3000`
 
 4. **Open the Frontend:**
-   - Open `index.html` in a browser.
+   - Open `dashboard.html` in a browser.
 
 ## API Endpoints
 ### 1. Send OTP
@@ -99,6 +99,6 @@ This project is a simple phone verification system using **Node.js**, **Express*
 This project is licensed under the MIT License.
 
 ## Author
-- Jitendra Pardhi- [GitHub Profile](https://github.com/your-profile)
+- Jitendra Pardhi- [GitHub Profile](https://github.com/jitendrapardhi7694)
 
 # phone-verification
